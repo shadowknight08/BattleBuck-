@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea5804f9c9b4047acbcd560e25b95f4b, type: 3}
+  m_Name: WeaponConfig
+  m_EditorClassIdentifier: 
+  Identifier:
+    Path: QuantumUser/Simulation/Asset/WeaponConfig
+    Guid:
+      Value: 317843969333884495
+  bulletPrototype:
+    Id:
+      Value: 1521680400963137085
+  ShotOffset:
+    RawValue: 65536
+  FireInterval:
+    RawValue: 6554
