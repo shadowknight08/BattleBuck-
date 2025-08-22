@@ -1,0 +1,4 @@
+signal WeaponProjectileShoot(EntityRef owner, FPVector2 spawnPosition, AssetRef<EntityPrototype> projectilePrototype);
+signal OnCollisionProjectileHitPlayer(CollisionInfo2D info, Projectile* projectile, Weapon* player);
+signal OnCollisionProjectileHitProjectile(CollisionInfo2D info, Projectile* projectile, Projectile* otherProjectile);
+signal OnCollisionPlayerHitOtherPlayer(CollisionInfo2D info, Weapon* player, Weapon* otherPlayer); 

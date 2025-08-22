@@ -1,0 +1,4 @@
+component Weapon {
+  AssetRef<WeaponSpec> weaponConfig;
+  FP FireInterval;
+} 

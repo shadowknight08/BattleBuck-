@@ -1,0 +1,5 @@
+component WeaponInventory {
+  list<AssetRef<WeaponSpec>> WeaponConfigs;
+  int CurrentIndex;
+  int Count;
+} 

@@ -4,14 +4,13 @@ namespace Quantum
     using UnityEngine.Scripting;
 
     [Preserve]
-    public unsafe class ProjectileSystem : SystemMainThreadFilter<ProjectileSystem.Filter>,ISignalWeaponProjectileShoot,ISignalOnCollisionProjectileHitPlayer,ISignalOnCollisionProjectileHitProjectile
+    public unsafe class ProjectileSystem : SystemMainThreadFilter<ProjectileSystem.Filter>, ISignalWeaponProjectileShoot, ISignalOnCollisionProjectileHitPlayer, ISignalOnCollisionProjectileHitProjectile
     {
-        public void WeaponProjectileShoot(Frame frame ,EntityRef owner, FPVector2 spawnPosition, AssetRef<EntityPrototype> projectilePrototype)
+        public void WeaponProjectileShoot(Frame frame, EntityRef owner, FPVector2 spawnPosition, AssetRef<EntityPrototype> projectilePrototype)
         {
             EntityRef projectileEntity = frame.Create(projectilePrototype);
             Transform2D* projectileTransform = frame.Unsafe.GetPointer<Transform2D>(projectileEntity);
             Transform2D* ownerTransform = frame.Unsafe.GetPointer<Transform2D>(owner);
-
 
             projectileTransform->Rotation = ownerTransform->Rotation;
             projectileTransform->Position = spawnPosition;
@@ -24,7 +23,6 @@ namespace Quantum
             PhysicsBody2D* body = frame.Unsafe.GetPointer<PhysicsBody2D>(projectileEntity);
             body->Velocity = ownerTransform->Right * config.ProjectileInitialSpeed;
         }
-
 
         public struct Filter
         {
@@ -43,18 +41,21 @@ namespace Quantum
 
         public void OnCollisionProjectileHitPlayer(Frame f, CollisionInfo2D info, Projectile* projectile, Weapon* player)
         {
-            Log.Debug("Bullet hit the player");
+            // Prevent self-hit
             if (projectile->Owner == info.Other)
             {
                 info.IgnoreCollision = true;
                 return;
             }
 
-            f.Unsafe.TryGetPointer<Health>(info.Other, out var health);
+            if (f.Unsafe.TryGetPointer<Health>(info.Other, out var health))
+            {
+                // Decrement health safely
+                health->CurrentHealth -= 1; // Or use config-damage if available
+                // Raise a Damage event for view/UI
+                f.Events.PlayerAdded(info.Other); // Replace with Damage event if defined
+            }
 
-            health--;
-
-            Log.Debug("Bullet hit the player");
             f.Destroy(info.Entity);
         }
 

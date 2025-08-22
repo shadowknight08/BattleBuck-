@@ -1,0 +1,5 @@
+component Projectile {
+  FP TTl;
+  EntityRef Owner;
+  AssetRef<ProjectileConfig> ProjectileConfig;
+} 

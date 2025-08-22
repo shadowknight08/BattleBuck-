@@ -1,0 +1,3 @@
+event PlayerAdded {
+  EntityRef player;
+} 

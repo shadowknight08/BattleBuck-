@@ -1,0 +1,9 @@
+singleton component GameData {
+  [AllocateOnComponentAdded, FreeOnComponentRemoved]
+  list<EntityRef> playerList;
+} 
+
+event WeaponSwitch {
+    entity_ref Character;
+    AssetRef<WeaponSpec> NewWeapon;
+} 

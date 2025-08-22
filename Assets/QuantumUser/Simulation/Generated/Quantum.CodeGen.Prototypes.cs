@@ -94,10 +94,12 @@ namespace Quantum.Prototypes {
   public unsafe partial class InputPrototype : StructPrototype {
     public FPVector2 Direction;
     public Button Fire;
+    public Button SwitchWeapon;
     partial void MaterializeUser(Frame frame, ref Quantum.Input result, in PrototypeMaterializationContext context);
     public void Materialize(Frame frame, ref Quantum.Input result, in PrototypeMaterializationContext context = default) {
         result.Direction = this.Direction;
         result.Fire = this.Fire;
+        result.SwitchWeapon = this.SwitchWeapon;
         MaterializeUser(frame, ref result, in context);
     }
   }
@@ -147,6 +149,35 @@ namespace Quantum.Prototypes {
     public void Materialize(Frame frame, ref Quantum.Weapon result, in PrototypeMaterializationContext context = default) {
         result.weaponConfig = this.weaponConfig;
         result.FireInterval = this.FireInterval;
+        MaterializeUser(frame, ref result, in context);
+    }
+  }
+  [System.SerializableAttribute()]
+  [Quantum.Prototypes.Prototype(typeof(Quantum.WeaponInventory))]
+  public unsafe partial class WeaponInventoryPrototype : ComponentPrototype<Quantum.WeaponInventory> {
+    [DynamicCollectionAttribute()]
+    public AssetRef<WeaponSpec>[] WeaponConfigs = {};
+    public Int32 CurrentIndex;
+    public Int32 Count;
+    partial void MaterializeUser(Frame frame, ref Quantum.WeaponInventory result, in PrototypeMaterializationContext context);
+    public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
+        Quantum.WeaponInventory component = default;
+        Materialize((Frame)f, ref component, in context);
+        return f.Set(entity, component) == SetResult.ComponentAdded;
+    }
+    public void Materialize(Frame frame, ref Quantum.WeaponInventory result, in PrototypeMaterializationContext context = default) {
+        if (this.WeaponConfigs.Length == 0) {
+          result.WeaponConfigs = default;
+        } else {
+          var list = frame.AllocateList(out result.WeaponConfigs, this.WeaponConfigs.Length);
+          for (int i = 0; i < this.WeaponConfigs.Length; ++i) {
+            AssetRef<WeaponSpec> tmp = default;
+            tmp = this.WeaponConfigs[i];
+            list.Add(tmp);
+          }
+        }
+        result.CurrentIndex = this.CurrentIndex;
+        result.Count = this.Count;
         MaterializeUser(frame, ref result, in context);
     }
   }
